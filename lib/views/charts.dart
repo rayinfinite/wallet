@@ -6,39 +6,46 @@ class Charts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: LineChart(
-          LineChartData(
-            gridData: FlGridData(show: true),
-            titlesData: FlTitlesData(show: false),
-            borderData: FlBorderData(
-              show: true,
-              border: Border.all(
-                color: const Color(0xff37434d),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      height: 300,
+      child: LineChart(
+        LineChartData(
+          gridData: const FlGridData(show: true),
+          titlesData: const FlTitlesData(
+            rightTitles: AxisTitles(), // 显示左边的标题
+            topTitles: AxisTitles(),
+          ),
+          // 显示下边的标题),
+          borderData: FlBorderData(
+            show: true,
+            border: const Border(
+              left: BorderSide(
+                color: Color(0xff37434d),
+                width: 1,
+              ),
+              bottom: BorderSide(
+                color: Color(0xff37434d),
                 width: 1,
               ),
             ),
-            // 根据您的数据范围调整
-            lineBarsData: [
-              LineChartBarData(
-                spots: [
-                  FlSpot(1, 1),
-                  FlSpot(3, 4),
-                  FlSpot(5, 1.8),
-                  FlSpot(7, 5),
-                  FlSpot(10, 2),
-                  FlSpot(12, 2.2),
-                  FlSpot(13, 1.8),
-                ],
-                isCurved: true,
-                color: Colors.blue,
-                dotData: FlDotData(show: true),
-                belowBarData: BarAreaData(show: false),
-              ),
-            ],
           ),
+          minX: 0,
+          minY: 0,
+          lineBarsData: [
+            LineChartBarData(
+              spots: [
+                FlSpot(0, 3),
+                FlSpot(2, 1),
+                FlSpot(4, 4),
+                FlSpot(6, 2),
+              ],
+              isCurved: true,
+              color: Colors.blue,
+              dotData: const FlDotData(show: true),
+              belowBarData: BarAreaData(show: false),
+            ),
+          ],
         ),
       ),
     );

@@ -88,21 +88,19 @@ class _TransactionState extends State<Transaction> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
-          ListView(
-            children: [
-              card(context),
-            ],
-          ),
-          const Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: InputSheet(),
-          ),
-        ],
-      ),
+    return Stack(
+      children: [
+        ListView(
+          children: [
+            card(context),
+          ],
+        ),
+        const Positioned(
+          bottom: 16.0,
+          right: 16.0,
+          child: InputSheet(),
+        ),
+      ],
     );
   }
 }

@@ -1,9 +1,6 @@
-// Copyright 2021 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 import 'package:wallet/views/transaction.dart';
+import 'package:wallet/views/wallet.dart';
 
 import 'views/charts.dart';
 import 'views/component_screen.dart';
@@ -70,8 +67,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       case 1:
         return const Charts();
       case 2:
-        // return const ElevationScreen();
-        return const LineChartSample1();
+        return const Wallet();
       case 3:
         return Expanded(
           child: responsiveColumnLayout(
@@ -186,7 +182,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             visible: !showSmallLayout, // 根据条件设置是否可见
             child: createNavigationRail(),
           ),
-          createScreenFor(),
+          Expanded(child: createScreenFor()),
         ],
       ),
       bottomNavigationBar: Visibility(

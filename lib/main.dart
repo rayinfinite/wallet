@@ -1,7 +1,3 @@
-// Copyright 2021 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'package:flutter/material.dart';
 import 'package:wallet/components/storage.dart';
 import 'home.dart';
@@ -20,7 +16,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  ThemeMode themeMode = ThemeMode.light;
+  ThemeMode themeMode = ThemeMode.system;
   ColorSeed color = ColorSeed.baseColor;
 
   @override

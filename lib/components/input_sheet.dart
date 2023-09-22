@@ -72,17 +72,15 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet>
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         TabBar(
-          // Setting isScrollable to true prevents the tabs from being
-          // wrapped in [Expanded] widgets, which allows for more
-          // flexible sizes and size animations among tabs.
           isScrollable: true,
           labelPadding: EdgeInsets.zero,
           controller: _tabController,
-          labelColor: Theme.of(context).primaryColor,
+          labelColor: Theme.of(context).colorScheme.primary,
           // 设置选中标签的颜色
-          unselectedLabelColor: Theme.of(context).primaryColor,
+          unselectedLabelColor: Theme.of(context).colorScheme.primary,
           // 设置未选中标签的颜色
           tabs: [
             _RallyTab(
@@ -103,26 +101,13 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet>
           // This hides the tab indicator.
           indicatorColor: Colors.transparent,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //使用TabBarView会导致在 SingleChildScrollView 中，TabBarView 的高度是无界的，
+        // 这意味着它会尽可能地扩展到屏幕的大小，导致 TabBarView 的高度超过屏幕的大小。
+        IndexedStack(
+          index: tabIndex,
           children: [
-            Text('expense'),
-            IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            Text('income'),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildCategoryButton(Icons.shopping_cart, 'Shopping'),
-            _buildCategoryButton(Icons.restaurant, 'Diet'),
-            _buildCategoryButton(Icons.home, 'Residential'),
-            _buildCategoryButton(Icons.commute, 'Commute'),
+            _buildExpenseView(),
+            _buildIncomeView(),
           ],
         ),
         const SizedBox(height: 16.0),
@@ -131,27 +116,52 @@ class _TransactionBottomSheetState extends State<TransactionBottomSheet>
     );
   }
 
+  Widget _buildExpenseView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildCategoryButton(Icons.shopping_cart, 'Shopping'),
+        _buildCategoryButton(Icons.restaurant, 'Diet'),
+        _buildCategoryButton(Icons.home, 'Residential'),
+        _buildCategoryButton(Icons.commute, 'Commute'),
+      ],
+    );
+  }
+
+  Widget _buildIncomeView() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildCategoryButton(Icons.monetization_on, 'Wage'),
+        _buildCategoryButton(Icons.redeem, 'Bonus'),
+        _buildCategoryButton(Icons.pie_chart, 'Investment'),
+        _buildCategoryButton(Icons.hourglass_empty, 'Part-time'),
+      ],
+    );
+  }
+
   Widget _buildCategoryButton(IconData icon, String text) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(4),
         child: OutlinedButton(
           onPressed: () {},
-          style: OutlinedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0), // 调整圆角半径
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 0),
-            child: Column(
-              children: [Icon(icon), Text(text)],
-            ),
+          style: _categoryButtonStyle,
+          child: Column(
+            children: [Icon(icon), Text(text)],
           ),
         ),
       ),
     );
   }
+
+  final _categoryButtonStyle = OutlinedButton.styleFrom(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10), // 调整圆角半径
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
+    textStyle: const TextStyle(overflow: TextOverflow.ellipsis),
+  );
 }
 
 const int tabCount = 2;
