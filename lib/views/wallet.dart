@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphic/graphic.dart';
 
-import '../components/linearPercentIndicator.dart';
+import '../components/linear_percent_indicator.dart';
 import '../components/wave_progress.dart';
 
 class Wallet extends StatelessWidget {
@@ -53,21 +53,23 @@ class Wallet extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           styleText("Budget      ", "   July"),
+          const SizedBox(height: 20),
           Material(
             elevation: 5,
             borderRadius: BorderRadius.circular(20),
             child: LinearPercentIndicator(
+              //TODO: fix overflow
               width: media.width - 50,
               lineHeight: 20.0,
               percent: 0.68,
               backgroundColor: Colors.grey.shade300,
-              progressColor: Color(0xFF1b52ff),
+              progressColor: const Color(0xFF1b52ff),
               animation: true,
               animateFromLastPercent: true,
               alignment: MainAxisAlignment.spaceEvenly,
               animationDuration: 1000,
-              linearStrokeCap: LinearStrokeCap.roundAll,
-              center: Text(
+              barRadius: const Radius.circular(20),
+              center: const Text(
                 "68.0%",
                 style: TextStyle(color: Colors.white),
               ),
@@ -76,92 +78,56 @@ class Wallet extends StatelessWidget {
           const SizedBox(height: 20),
           styleText("Cash flow", ""),
           const SizedBox(height: 20),
-          waveCard(
-            context,
-            "Earned",
-            200,
-            1,
-            Color(0xFF716cff),
-          ),
-          waveCard(
-            context,
-            "Spent",
-            3210,
-            -1,
-            Color(0xFFff596b),
-          ),
+          waveCard(context, "Earned", 200, 80, const Color(0xFF716cff)),
+          const SizedBox(height: 20),
+          waveCard(context, "Spent", -3210, 80, const Color(0xFFff596b)),
         ],
       ),
     );
   }
 
-  Widget waveCard(BuildContext context, String name, double amount, int type,
-      Color bgColor) {
-    Color fillColor = Colors.grey.shade100,
-    return Container(
-      margin: EdgeInsets.only(
-        top: 15,
-        right: 20,
-      ),
-      padding: EdgeInsets.only(left: 15),
-      height: screenAwareSize(80, context),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(6),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade100,
-            blurRadius: 6,
-            spreadRadius: 10,
-          )
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              WaveProgress(
-                screenAwareSize(45, context),
-                fillColor,
-                bgColor,
-                67,
-              ),
-              Text(
-                "80%",
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 20,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                name,
-                style:
-                    TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                "${type > 0 ? "" : "-"} \$ ${amount.toString()}",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+  Widget waveCard(BuildContext context, String name, double amount,
+      double percent, Color bgColor) {
+    Color fillColor = Colors.grey.shade100;
+    return Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.only(left: 15),
+        height: 100,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                WaveProgress(70, fillColor, bgColor, percent),
+                Text("$percent%", style: const TextStyle(color: Colors.white)),
+              ],
+            ),
+            const SizedBox(width: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  " $name",
+                  style: const TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
                 ),
-              )
-            ],
-          )
-        ],
+                const SizedBox(
+                  height: 8,
+                ),
+                Text(
+                  amount >= 0 ? "\$ $amount" : "- \$ ${-amount}",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -171,6 +137,7 @@ class Wallet extends StatelessWidget {
     final color = Theme.of(context).colorScheme.primary;
     return Container(
       padding: const EdgeInsets.all(16),
+      //TODO: fix overflow
       width: media.width / 2 - 30,
       height: media.height / 6,
       decoration: BoxDecoration(

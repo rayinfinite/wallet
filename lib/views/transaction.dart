@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/input_sheet.dart';
+import 'package:wallet/components/transaction_data.dart';
 
 class Transaction extends StatefulWidget {
   const Transaction({Key? key}) : super(key: key);
@@ -9,74 +10,27 @@ class Transaction extends StatefulWidget {
 }
 
 class _TransactionState extends State<Transaction> {
-  String day = 'Today';
+  List<DailyExpense> dailyExpenseList = [
+    DailyExpense(),
+    DailyExpense(),
+    DailyExpense(),
+  ];
 
-  List<ExpenseItem> expenseItems = [];
-  double totalExpenseAmount = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    expenseItems = [
-      ExpenseItem(
-          icon: Icons.shopping_cart, expenseTitle: '购物', expenseAmount: 100.0),
-      ExpenseItem(
-          icon: Icons.restaurant, expenseTitle: '餐饮', expenseAmount: 50.0),
-      // 添加更多的 ExpenseItem 对象
-    ];
-    totalExpenseAmount =
-        expenseItems.fold(0.0, (double previousValue, ExpenseItem item) {
-      return previousValue + item.expenseAmount;
-    });
-  }
-
-  String getCurrentDate() {
-    // 获取当前日期
-    DateTime now = DateTime.now();
-
-    // 使用DateFormat来格式化日期
-    String formattedDate = "${now.year}-${now.month}-${now.day}";
-
-    return formattedDate;
-  }
-
-  Widget card(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0), // 设置内边距
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        elevation: 5.0,
-        child: Column(
-          children: [
-            _buildTableHeader(),
-            const Divider(height: 0),
-            _buildTableBody(),
-          ],
-        ),
-      ),
+  Widget _buildTableHeader(DailyExpense daily) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(daily.formattedDate,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text('\$ ${daily.totalExpenseAmount.toStringAsFixed(2)}',
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+      ],
     );
   }
 
-  Widget _buildTableHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text('日期 ${getCurrentDate()}',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text('金额 $totalExpenseAmount',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTableBody() {
+  Widget _buildTableBody(DailyExpense daily) {
     return Column(
-      children: expenseItems.map((item) {
+      children: daily.expenseItems.map((item) {
         return ListTile(
           leading: Icon(item.icon),
           title: Text(item.expenseTitle),
@@ -92,27 +46,21 @@ class _TransactionState extends State<Transaction> {
       children: [
         ListView(
           children: [
-            card(context),
+            ...dailyExpenseList.map((daily) {
+              return Theme(
+                data: Theme.of(context)
+                    .copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  initiallyExpanded: daily.isExpanded,
+                  title: _buildTableHeader(daily),
+                  children: [_buildTableBody(daily)],
+                ),
+              );
+            }).toList(),
           ],
         ),
-        const Positioned(
-          bottom: 16.0,
-          right: 16.0,
-          child: InputSheet(),
-        ),
+        const Positioned(bottom: 16, right: 16, child: InputSheet()),
       ],
     );
   }
-}
-
-class ExpenseItem {
-  final IconData icon;
-  final String expenseTitle;
-  final double expenseAmount;
-
-  ExpenseItem({
-    required this.icon,
-    required this.expenseTitle,
-    required this.expenseAmount,
-  });
 }

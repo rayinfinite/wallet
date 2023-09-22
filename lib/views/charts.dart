@@ -35,10 +35,10 @@ class Charts extends StatelessWidget {
           lineBarsData: [
             LineChartBarData(
               spots: [
-                FlSpot(0, 3),
-                FlSpot(2, 1),
-                FlSpot(4, 4),
-                FlSpot(6, 2),
+                const FlSpot(0, 3),
+                const FlSpot(2, 1),
+                const FlSpot(4, 4),
+                const FlSpot(6, 2),
               ],
               isCurved: true,
               color: Colors.blue,

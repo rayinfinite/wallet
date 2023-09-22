@@ -5,7 +5,6 @@ import 'package:wallet/views/wallet.dart';
 import 'views/charts.dart';
 import 'views/component_screen.dart';
 import 'components/constants.dart';
-import 'views/lineChart.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -286,9 +285,9 @@ const List<NavigationDestination> appBarDestinations = [
   ),
   NavigationDestination(
     tooltip: '',
-    icon: Icon(Icons.shopping_bag_outlined),
+    icon: Icon(Icons.account_balance_wallet_outlined),
     label: 'Wallet',
-    selectedIcon: Icon(Icons.shopping_bag),
+    selectedIcon: Icon(Icons.account_balance_wallet),
   ),
   NavigationDestination(
     tooltip: '',
