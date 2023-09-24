@@ -47,6 +47,7 @@ class MyCalculatorState extends State<MyCalculator> {
   String expression = '';
   String operator = '';
   DateTime? selectedDate;
+  late Size media;
   static const String operators = "+-*/";
 
   void _onPressed(String button) {
@@ -98,6 +99,7 @@ class MyCalculatorState extends State<MyCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    media = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -106,11 +108,6 @@ class MyCalculatorState extends State<MyCalculator> {
           expression,
           style: const TextStyle(fontSize: 24, color: Colors.blue),
         ),
-        // 显示结果
-        Text(
-          first + operator + second,
-          style: const TextStyle(fontSize: 24, color: Colors.red),
-        ),
         // 按钮
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,51 +115,28 @@ class MyCalculatorState extends State<MyCalculator> {
             Row(
               children: [
                 MaterialButton(
+                  minWidth: media.width - 32,
                   onPressed: () {},
-                  minWidth:300,
-                  child: Text(first + operator + second),
+                  child: Text(
+                    first + operator + second,
+                    style: const TextStyle(
+                        fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
             Row(
               children: [
                 MaterialButton(
+                  minWidth: media.width / 4 - 8,
                   onPressed: () {},
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: const Icon(Icons.credit_card),
                 ),
-                MaterialButton(
-                  onPressed: () async {
-                    DateTime? date = await showDatePicker(
-                      context: context,
-                      initialDate: selectedDate ?? DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 10),
-                      lastDate: DateTime(DateTime.now().year + 1),
-                    );
-                    setState(() {
-                      selectedDate = date;
-                      if (selectedDate != null) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Selected Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'),
-                        ));
-                      }
-                    });
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Icon(Icons.calendar_month),
-                ),
-                MaterialButton(
-                  onPressed: () {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: const Icon(Icons.add),
-                ),
+                _dateButton(),
+                _button('+'),
                 _button('='),
               ],
             ),
@@ -206,11 +180,41 @@ class MyCalculatorState extends State<MyCalculator> {
 
   Widget _button(String text) {
     return MaterialButton(
+      minWidth: media.width / 4 - 8,
+      elevation: 5,
       onPressed: () => _onPressed(text),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Text(text),
+      child: Text(text,
+          style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Widget _dateButton() {
+    return MaterialButton(
+      minWidth: media.width / 4 - 8,
+      onPressed: () async {
+        DateTime? date = await showDatePicker(
+          context: context,
+          initialDate: selectedDate ?? DateTime.now(),
+          firstDate: DateTime(DateTime.now().year - 10),
+          lastDate: DateTime(DateTime.now().year + 1),
+        );
+        setState(() {
+          selectedDate = date;
+          if (selectedDate != null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Selected Date: ${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'),
+            ));
+          }
+        });
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: const Icon(Icons.calendar_month),
     );
   }
 }
